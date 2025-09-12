@@ -1,10 +1,12 @@
 use actix_web::{web, get, App, HttpResponse, HttpServer, Responder};
 use dotenv::dotenv;
-use sqlx::{postgres::PgPoolOptions, Pool, Postgres};
+use sqlx::{Pool, Postgres};
 
 mod database {
     pub mod postgres_connection;
 }
+
+mod services;
 
 #[derive(Clone)]
 pub struct AppState {
@@ -30,5 +32,6 @@ async fn main() -> std::io::Result<()> {
                 })
             )
             .service(index)
+            .configure(services::users::services::users_routes)
     }).bind(("127.0.0.1", 8080))?.run().await
 }   
